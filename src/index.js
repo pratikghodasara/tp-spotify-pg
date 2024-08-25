@@ -22,6 +22,7 @@ let updateIsShufflingAuto = "false";
 let updateIsRepeatingAuto = "false";
 let updateIsVolumeMuteAuto = "false";
 let updateVolumeConnectorAuto = "false";
+let updatePositionConnectorAuto = "false";
 
 const spotifyosa = require('./osascript');
 let previousIsOpenState = undefined;
@@ -31,6 +32,7 @@ let previousIsShufflingState = undefined;
 let previousIsRepeatingState = undefined;
 let previousIsVolumeMuteState = undefined;
 let previousVolumeConnectorState = undefined;
+let previousPositionConnectorState = undefined;
 
 let currentTrackTitle = undefined;
 let currentTrackAlbum = undefined;
@@ -53,6 +55,7 @@ const settings = {
     [constants.SETTING_IS_REPEATING_AUTOMATIC_UPDATE]: updateIsRepeatingAuto,
     [constants.SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE]: updateIsVolumeMuteAuto,
     [constants.SETTING_VOLUME_CONNECTOR_AUTOMATIC_UPDATE]: updateVolumeConnectorAuto,
+    [constants.SETTING_POSITION_CONNECTOR_AUTOMATIC_UPDATE]: updatePositionConnectorAuto,
 };
 
 tpclient.on("Settings", (data) => {
@@ -109,6 +112,11 @@ tpclient.on("Settings", (data) => {
     if (updateVolumeConnectorAuto != settings[constants.SETTING_VOLUME_CONNECTOR_AUTOMATIC_UPDATE]) {
         updateVolumeConnectorAuto = settings[constants.SETTING_VOLUME_CONNECTOR_AUTOMATIC_UPDATE];
         tpclient.logIt("DEBUG", "Settings: Update volume connector state automatically is set to", updateVolumeConnectorAuto);
+    }
+
+    if (updatePositionConnectorAuto != settings[constants.SETTING_POSITION_CONNECTOR_AUTOMATIC_UPDATE]) {
+        updatePositionConnectorAuto = settings[constants.SETTING_POSITION_CONNECTOR_AUTOMATIC_UPDATE];
+        tpclient.logIt("DEBUG", "Settings: Update position connector state automatically is set to", updatePositionConnectorAuto);
     }
 
     updateSpotifyState(true);
@@ -357,6 +365,18 @@ tpclient.on("ConnectorChange", (data) => {
             }
         });
     }
+    else if (data.connectorId === "connector_spotifypg_position") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.isApplicationPlaying().then((isPlaying) => {
+                    if (isPlaying == "playing") {
+                        previousPositionConnectorState = data.value;
+                        spotifyosa.setTrackPosition(data.value);
+                    }
+                });
+            }
+        });
+    }
     else {
         tpclient.logIt("DEBUG", "Action was not defined for ", data.actionId);
     }
@@ -453,6 +473,7 @@ function updateSpotifyState(shouldForceUpdate) {
             getIsRepeatingState(shouldForceUpdate);
             getIsVolumeMuteState(shouldForceUpdate);
             getVolumeConnectorState(shouldForceUpdate);
+            getPositionConnectorState(shouldForceUpdate);
         }
     });
 }
@@ -572,6 +593,24 @@ function getVolumeConnectorState(shouldForceUpdate) {
     }
 }
 
+function getPositionConnectorState(shouldForceUpdate) {
+    if (updatePositionConnectorAuto == "true" || shouldForceUpdate) {
+        spotifyosa.isApplicationPlaying().then((isPlaying) => {
+            if (isPlaying == "playing") {
+                spotifyosa.getTrackPosition().then((currentPosition) => {
+                    spotifyosa.getTrackDuration().then((duration) => {
+                        let connectorValue = parseFloat(currentPosition) / parseFloat(duration) * 100;
+                        if (previousPositionConnectorState != connectorValue) {
+                            previousPositionConnectorState = connectorValue;
+                            tpclient.connectorUpdate("connector_spotifypg_position", connectorValue);
+                        }
+                    });
+                });
+            }
+        });
+    }
+}
+
 function sendTrackInfoStates(trackTitle, trackAlbum, trackArtist, trackAlbumArtist, trackDuration, trackId, trackArtworkUrl) {
     let states = [
         { id: 'state_spotifypg_track_title', value: trackTitle },
@@ -597,6 +636,7 @@ function sendDefaultStates() {
 
     let connectors = [
         { id: "connector_spotifypg_volume", value: 0 },
+        { id: "connector_spotifypg_position", value: 0 },
     ];
     tpclient.connectorUpdateMany(connectors);
 }

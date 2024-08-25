@@ -103,6 +103,16 @@
                 "title":"Update Volume Connector State Automatically",
                 "body":"Set value to true for the plugin to get volume connector state update from Spotify automatically.",
             }
+        },
+        {
+            "name": "Update Position Connector State Automatically",
+            "default": "true",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Position Connector State Automatically",
+                "body":"Set value to true for the plugin to get position connector state update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -584,6 +594,11 @@
                     "id": "connector_spotifypg_volume",
                     "name": "Spotify Volume Connector",
                     "format": "Spotify volume connector"
+                },
+                {
+                    "id": "connector_spotifypg_position",
+                    "name": "Spotify Position Connector",
+                    "format": "Spotify position connector"
                 }
             ]
         }
