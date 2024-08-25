@@ -359,6 +359,23 @@
                     ]
                 },
                 {
+                    "id": "action_spotifypg_replay",
+                    "name": "Replay Current Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Replay current track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
                     "id": "action_spotifypg_quit",
                     "name": "Quit Spotify",
                     "lines": {

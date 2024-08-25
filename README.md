@@ -87,6 +87,7 @@ Refer to [Changelog](CHANGELOG.md) for details.
   - Change Spotify Volume
     - Data
       - Delta Volume (Default: 10)
+  - Replay Current Track on Spotify
   - Quit Spotify
 
 ### States
