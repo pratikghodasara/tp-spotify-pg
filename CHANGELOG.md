@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Added
+  - Setting up the Application Features ([#3](https://github.com/pratikghodasara/tp-spotify-pg/pull/3))
+    - Added Open, Toggle Visibility and Quit Application features ([f165f5d](https://github.com/pratikghodasara/tp-spotify-pg/commit/f165f5d))
+
 ## v0.0.1 - 2024.08.25
 
 ### Added
