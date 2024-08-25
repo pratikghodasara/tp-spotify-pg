@@ -66,6 +66,7 @@ Refer to [Changelog](CHANGELOG.md) for details.
  - Update Is Shuffling State Automatically - Set value to 'true' for the plugin to get is is shuffling state update from Spotify automatically or any other value to disable automatic updates.
  - Update Is Repeating State Automatically - Set value to 'true' for the plugin to get is repeating state update from Spotify automatically or any other value to disable automatic updates.
  - Update Is Volume Mute State Automatically - Set value to 'true' for the plugin to get is volume mute state update from Spotify automatically or any other value to disable automatic updates.
+ - Update Volume Connector State Automatically - Set value to 'true' for the plugin to get volume connector state update from Spotify automatically or any other value to disable automatic updates.
 
 ### Actions
   - Update Spotify State
@@ -149,6 +150,9 @@ Refer to [Changelog](CHANGELOG.md) for details.
     - Values:
       - true: Muted
       - false: Unmuted
+
+### Connectors
+  - Spotify Volume Connector
 
 ## Sample Page
 

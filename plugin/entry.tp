@@ -93,6 +93,16 @@
                 "title":"Update Is Volume Mute State Automatically",
                 "body":"Set value to true for the plugin to get is volume mute state update from Spotify automatically.",
             }
+        },
+        {
+            "name": "Update Volume Connector State Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Volume Connector State Automatically",
+                "body":"Set value to true for the plugin to get volume connector state update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -553,6 +563,11 @@
                 }
             ],
             "connectors": [
+                {
+                    "id": "connector_spotifypg_volume",
+                    "name": "Spotify Volume Connector",
+                    "format": "Spotify volume connector"
+                }
             ]
         }
     ]

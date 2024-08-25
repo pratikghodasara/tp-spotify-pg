@@ -21,6 +21,7 @@ let updateTrackInfoAuto = "false";
 let updateIsShufflingAuto = "false";
 let updateIsRepeatingAuto = "false";
 let updateIsVolumeMuteAuto = "false";
+let updateVolumeConnectorAuto = "false";
 
 const spotifyosa = require('./osascript');
 let previousIsOpenState = undefined;
@@ -29,6 +30,7 @@ let previousIsPlayingState = undefined;
 let previousIsShufflingState = undefined;
 let previousIsRepeatingState = undefined;
 let previousIsVolumeMuteState = undefined;
+let previousVolumeConnectorState = undefined;
 
 let currentTrackTitle = undefined;
 let currentTrackAlbum = undefined;
@@ -50,6 +52,7 @@ const settings = {
     [constants.SETTING_IS_SHUFFLING_AUTOMATIC_UPDATE]: updateIsShufflingAuto,
     [constants.SETTING_IS_REPEATING_AUTOMATIC_UPDATE]: updateIsRepeatingAuto,
     [constants.SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE]: updateIsVolumeMuteAuto,
+    [constants.SETTING_VOLUME_CONNECTOR_AUTOMATIC_UPDATE]: updateVolumeConnectorAuto,
 };
 
 tpclient.on("Settings", (data) => {
@@ -101,6 +104,11 @@ tpclient.on("Settings", (data) => {
     if (updateIsVolumeMuteAuto != settings[constants.SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE]) {
         updateIsVolumeMuteAuto = settings[constants.SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE];
         tpclient.logIt("DEBUG", "Settings: Update is volume mute state automatically is set to", updateIsVolumeMuteAuto);
+    }
+
+    if (updateVolumeConnectorAuto != settings[constants.SETTING_VOLUME_CONNECTOR_AUTOMATIC_UPDATE]) {
+        updateVolumeConnectorAuto = settings[constants.SETTING_VOLUME_CONNECTOR_AUTOMATIC_UPDATE];
+        tpclient.logIt("DEBUG", "Settings: Update volume connector state automatically is set to", updateVolumeConnectorAuto);
     }
 
     updateSpotifyState(true);
@@ -254,6 +262,8 @@ tpclient.on("Action", async (data) => {
                         spotifyosa.setApplicationVolume(0).then(() => {
                             previousIsVolumeMuteState = "true";
                             tpclient.stateUpdate("state_spotifypg_mute", "true");
+
+                            getVolumeConnectorState(true);
                         })
                     });
                 }
@@ -271,6 +281,8 @@ tpclient.on("Action", async (data) => {
                     spotifyosa.setApplicationVolume(beforeMuteVolume).then(() => {
                         previousIsVolumeMuteState = "false";
                         tpclient.stateUpdate("state_spotifypg_mute", "false");
+
+                        getVolumeConnectorState(true);
                     })
                 }
             });
@@ -289,6 +301,7 @@ tpclient.on("Action", async (data) => {
 
                         spotifyosa.setApplicationVolume(newVolume).then(() => {
                             getIsVolumeMuteState(true);
+                            getVolumeConnectorState(true);
                         });
                     });
                 }
@@ -314,6 +327,28 @@ tpclient.on("Action", async (data) => {
 
 tpclient.on("ConnectorChange", (data) => {
     tpclient.logIt("DEBUG", "Connector: Received update from touch portal with id:", data.connectorId);
+    if (data.connectorId === "connector_spotifypg_volume") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                previousVolumeConnectorState = data.value;
+                spotifyosa.setApplicationVolume(data.value).then(() => {
+                    if (previousIsVolumeMuteState == "false" && data.value == 0) {
+                        beforeMuteVolume = 0;
+                        previousIsVolumeMuteState = "true";
+                        tpclient.stateUpdate("state_spotifypg_mute", "true");
+                    }
+                    else if (previousIsVolumeMuteState == "true" && data.value != 0) {
+                        beforeMuteVolume = undefined;
+                        previousIsVolumeMuteState = "false";
+                        tpclient.stateUpdate("state_spotifypg_mute", "false");
+                    }
+                });
+            }
+        });
+    }
+    else {
+        tpclient.logIt("DEBUG", "Action was not defined for ", data.actionId);
+    }
 });
 
 tpclient.on("ListChange", (data) => {
@@ -406,6 +441,7 @@ function updateSpotifyState(shouldForceUpdate) {
             getIsShufflingState(shouldForceUpdate);
             getIsRepeatingState(shouldForceUpdate);
             getIsVolumeMuteState(shouldForceUpdate);
+            getVolumeConnectorState(shouldForceUpdate);
         }
     });
 }
@@ -514,6 +550,17 @@ function getIsVolumeMuteState(shouldForceUpdate) {
     }
 }
 
+function getVolumeConnectorState(shouldForceUpdate) {
+    if (updateVolumeConnectorAuto == "true" || shouldForceUpdate) {
+        spotifyosa.getApplicationVolume().then((currentVolume) => {
+            if (previousVolumeConnectorState != currentVolume) {
+                previousVolumeConnectorState = currentVolume;
+                tpclient.connectorUpdate("connector_spotifypg_volume", currentVolume);
+            }
+        });
+    }
+}
+
 function sendTrackInfoStates(trackTitle, trackAlbum, trackArtist, trackAlbumArtist, trackDuration, trackId, trackArtworkUrl) {
     let states = [
         { id: 'state_spotifypg_track_title', value: trackTitle },
@@ -536,6 +583,11 @@ function sendDefaultStates() {
         { id: "state_spotifypg_mute", value: "false" },
     ];
     tpclient.stateUpdateMany(states);
+
+    let connectors = [
+        { id: "connector_spotifypg_volume", value: 0 },
+    ];
+    tpclient.connectorUpdateMany(connectors);
 }
 
 tpclient.connect({ pluginId: pluginId, updateUrl: pluginUpdateUrl });

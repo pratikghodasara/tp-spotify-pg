@@ -12,4 +12,5 @@ module.exports = {
     SETTING_IS_SHUFFLING_AUTOMATIC_UPDATE: 'Update Is Shuffling State Automatically',
     SETTING_IS_REPEATING_AUTOMATIC_UPDATE: 'Update Is Repeating State Automatically',
     SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE: 'Update Is Volume Mute State Automatically',
+    SETTING_VOLUME_CONNECTOR_AUTOMATIC_UPDATE: 'Update Volume Connector State Automatically',
 }
