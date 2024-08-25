@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Setting up the Application Features ([#3](https://github.com/pratikghodasara/tp-spotify-pg/pull/3))
     - Added Open, Toggle Visibility and Quit Application features ([f165f5d](https://github.com/pratikghodasara/tp-spotify-pg/commit/f165f5d))
 
+  - Setting up the Track Features ([#4](https://github.com/pratikghodasara/tp-spotify-pg/pull/4))
+    - Added Play, Pause and Toggle Play Pause features ([93bdcc8](https://github.com/pratikghodasara/tp-spotify-pg/commit/93bdcc8))
+    - Added Play Next and Previous features ([1638530](https://github.com/pratikghodasara/tp-spotify-pg/commit/1638530))
+    - Added Track Info feature ([3e0e067](https://github.com/pratikghodasara/tp-spotify-pg/commit/3e0e067))
+
 ## v0.0.1 - 2024.08.25
 
 ### Added

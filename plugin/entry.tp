@@ -43,6 +43,26 @@
                 "title":"Automatic Spotify State Update Frequency",
                 "body":"Set the duration (in seconds) of how fequently the plugin will get state updates from Spotify.",
             }
+        },
+        {
+            "name": "Update Is Playing State Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Is Playing State Automatically",
+                "body":"Set value to true for the plugin to get is playing state update from Spotify automatically.",
+            }
+        },
+        {
+            "name": "Update Track Info Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Track Info Automatically",
+                "body":"Set value to true for the plugin to get track info update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -119,6 +139,91 @@
                     "type": "communicate",
                 },
                 {
+                    "id": "action_spotifypg_play",
+                    "name": "Play Current Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Play current track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_pause",
+                    "name": "Pause Current Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Pause current track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_toggle_play",
+                    "name": "Toggle Play Pause Current Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                   {
+                                        "lineFormat": "Toggle play pause current track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_next",
+                    "name": "Play Next Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Play next track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_previous",
+                    "name": "Play Previous Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Play previous track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
                     "id": "action_spotifypg_quit",
                     "name": "Quit Spotify",
                     "lines": {
@@ -156,6 +261,58 @@
                         "true",
                         "false"
                     ]
+                },
+                {
+                    "id": "state_spotifypg_play",
+                    "type": "choice",
+                    "desc": "Is Spotify Playing",
+                    "default": "Paused",
+                    "valueChoices": [
+                        "Paused",
+                        "Playing"
+                    ]
+                },
+                {
+                    "id": "state_spotifypg_track_title",
+                    "type": "text",
+                    "desc": "Spotify Track Title",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_album",
+                    "type": "text",
+                    "desc": "Spotify Track Album",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_artist",
+                    "type": "text",
+                    "desc": "Spotify Track Artist",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_album_artist",
+                    "type": "text",
+                    "desc": "Spotify Track Album Artist",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_duration",
+                    "type": "text",
+                    "desc": "Spotify Track Duration",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_id",
+                    "type": "text",
+                    "desc": "Spotify Track Id",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_artwork",
+                    "type": "text",
+                    "desc": "Spotify Track Artwork Url",
+                    "default": ""
                 }
             ],
             "events": [
@@ -182,6 +339,26 @@
                         "false"
                     ],
                     "valueStateId":"state_spotifypg_visible"
+                },
+                {
+                    "id":"event_spotifypg_play",
+                    "name":"On spotify is playing state changed",
+                    "format":"On spotify is playing state changed to $val",
+                    "type":"communicate",
+                    "valueType":"choice",
+                    "valueChoices": [
+                        "Paused",
+                        "Playing"
+                    ],
+                    "valueStateId":"state_spotifypg_play"
+                },
+                {
+                    "id":"event_spotifypg_track",
+                    "name":"On spotify track changed",
+                    "format":"On spotify track changed to $val",
+                    "type":"communicate",
+                    "valueType":"text",
+                    "valueStateId":"state_spotifypg_track_title"
                 }
             ],
             "connectors": [
