@@ -75,6 +75,10 @@ Refer to [Sample Page](resources/tpspotifyas.tpz2) that imports directly into [T
   - [out-url](https://www.npmjs.com/package/out-url)
   - [touchportal-api](https://www.npmjs.com/package/touchportal-api)
 
+- Development:
+  - [adm-zip](https://www.npmjs.com/package/adm-zip)
+  - [pkg](https://www.npmjs.com/package/pkg)
+
 ## Author
 
 - [Pratik Ghodasara](https://github.com/pratikghodasara)

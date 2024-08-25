@@ -1,0 +1,35 @@
+name: Feature
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/*
+jobs:
+  release:
+    name: Package Plugin
+    runs-on: macos-latest
+    permissions:
+        contents: write
+    steps:
+      - name: Setup environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Package plugin
+        run: |
+          npm run package
+      - name: Upload Plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: Plugin
+          path: ${{ github.workspace }}/tpspotifypg/*.tpp
+      - name: Upload Sample Page
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sample Page
+          path: ${{ github.workspace }}/resources/*.tpz2

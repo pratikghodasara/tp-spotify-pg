@@ -1,0 +1,82 @@
+name: Release
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  verify:
+    name: Verify Release
+    runs-on: macos-latest
+    permissions:
+        contents: write
+    outputs:
+      version:  ${{ steps.package_version.outputs.version }}
+      exists:  ${{ steps.package_version.outputs.exists }}
+    steps:
+      - name: Parse package file
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/actions
+      - name: Check if release already exists
+        uses: actions/github-script@v7
+        id: package_version
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const package_json = require('./package.json');
+              const version = package_json.version;
+              core.setOutput('version', version);
+              console.log("Package version is", version);
+
+              const { owner, repo } = context.repo;
+              let exists = false;
+              try {
+                const releases = await github.rest.repos.listReleases({ owner, repo });
+                exists = !!releases.data.find((r) => r.tag_name == version );
+              }
+              catch { }
+              console.log("Release for tag", version, "already exists:", exists);
+              core.setOutput('exists', exists);
+            } catch(err) {
+              core.setFailed(err)
+            }
+  release:
+    name: Create Release
+    needs: verify
+    if: needs.verify.outputs.exists == 'false'
+    runs-on: macos-latest
+    permissions:
+        contents: write
+    steps:
+      - name: Setup environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Package plugin
+        run: |
+          npm run package
+      - name: Create release draft
+        id: create_release_draft
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ needs.verify.outputs.version }}
+          artifacts: "${{ github.workspace }}/tpspotifypg/**/*.tpp,${{ github.workspace }}/resources/*.tpz2"
+          draft: true
+          prerelease: true
+          allowUpdates: true
+          updateOnlyUnreleased: true
+          skipIfReleaseExists: true
+          removeArtifacts: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
