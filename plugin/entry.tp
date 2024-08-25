@@ -1,0 +1,80 @@
+{
+    "api": 7,
+    "version": 001,
+    "name": "Spotify",
+    "id": "TPSpotifyPG",
+    "configuration" : {
+        "colorDark" : "#000000",
+        "colorLight" : "#808080",
+        "parentCategory" : "audio"
+    },
+    "plugin_start_cmd_linux": "sh %TP_PLUGIN_FOLDER%tpspotifypg/tpspotifypg.sh",
+    "plugin_start_cmd_mac": "sh %TP_PLUGIN_FOLDER%tpspotifypg/tpspotifypg.sh",
+    "plugin_start_cmd_windows": "\"%TP_PLUGIN_FOLDER%tpspotifypg\\tpspotifypg.exe\"",
+    "settings": [
+        {
+            "name": "Spotify Page Name",
+            "default": "/TPSpotifyPG.tml",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Spotify Page Name",
+                "body":"Name of the Spotify Page that will trigger forced state update.",
+            }
+        },
+        {
+            "name": "Update Spotify State Automatically",
+            "default": "true",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Spotify State Automatically",
+                "body":"Set value to true for the plugin to get state updates from Spotify automatically.",
+            }
+        },
+        {
+            "name": "Automatic Spotify State Update Frequency",
+            "default": "1",
+            "type": "number",
+            "minValue": 1,
+            "maxValue": 60,
+            "readOnly": false,
+            "tooltip":{
+                "title":"Automatic Spotify State Update Frequency",
+                "body":"Set the duration (in seconds) of how fequently the plugin will get state updates from Spotify.",
+            }
+        }
+    ],
+    "categories": [
+        {
+            "id": "TPSpotifyPG",
+            "name": "Spotify",
+            "imagepath": "%TP_PLUGIN_FOLDER%tpspotifypg/tpspotifypg.png",
+            "actions": [
+                {
+                    "id": "action_spotifypg_update",
+                    "name": "Update Spotify State",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Update spotify state"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                }
+            ],
+            "states": [
+            ],
+            "events": [
+            ],
+            "connectors": [
+            ]
+        }
+    ]
+}

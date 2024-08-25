@@ -1,3 +1,7 @@
+### Project ###
+build/
+tpspotifypg/
+
 ### Node ###
 # Logs
 logs
