@@ -87,6 +87,14 @@ function getTrackArtworkUrl() {
     return execute('tell application "Spotify" to artwork url of current track as string');
 }
 
+function isApplicationShuffling() {
+    return execute('tell application "Spotify" to get shuffling as string');
+}
+
+function toggleShuffle() {
+    return execute('tell application "Spotify"\n if shuffling then\n set shuffling to false\n else\n set shuffling to true\n end if\n end tell');
+}
+
 function quitApplication() {
     return execute('tell application "Spotify" to quit');
 }
@@ -111,5 +119,7 @@ module.exports = {
     getTrackDuration,
     getTrackId,
     getTrackArtworkUrl,
+    isApplicationShuffling,
+    toggleShuffle,
     quitApplication,
 };

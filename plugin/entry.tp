@@ -63,6 +63,16 @@
                 "title":"Update Track Info Automatically",
                 "body":"Set value to true for the plugin to get track info update from Spotify automatically.",
             }
+        },
+        {
+            "name": "Update Is Shuffling State Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Is Shuffling State Automatically",
+                "body":"Set value to true for the plugin to get is shuffling state update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -224,6 +234,23 @@
                     "type": "communicate",
                 },
                 {
+                    "id": "action_spotifypg_toggle_shuffle",
+                    "name": "Toggle Spotify Shuffle",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Toggle spotify application shuffle"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
                     "id": "action_spotifypg_quit",
                     "name": "Quit Spotify",
                     "lines": {
@@ -313,6 +340,16 @@
                     "type": "text",
                     "desc": "Spotify Track Artwork Url",
                     "default": ""
+                },
+                {
+                    "id": "state_spotifypg_shuffle",
+                    "type": "choice",
+                    "desc": "Is Spotify Shuffling",
+                    "default": "false",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ]
                 }
             ],
             "events": [
@@ -359,6 +396,18 @@
                     "type":"communicate",
                     "valueType":"text",
                     "valueStateId":"state_spotifypg_track_title"
+                },
+                {
+                    "id":"event_spotifypg_shuffle",
+                    "name":"On spotify is shuffling state changed",
+                    "format":"On spotify is shuffling state changed to $val",
+                    "type":"communicate",
+                    "valueType":"choice",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ],
+                    "valueStateId":"state_spotifypg_shuffle"
                 }
             ],
             "connectors": [
