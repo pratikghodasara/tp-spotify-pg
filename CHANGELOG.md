@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - Added Play Next and Previous features ([1638530](https://github.com/pratikghodasara/tp-spotify-pg/commit/1638530))
     - Added Track Info feature ([3e0e067](https://github.com/pratikghodasara/tp-spotify-pg/commit/3e0e067))
 
+  - Setting up the Shuffle and Repeat Features ([#5](https://github.com/pratikghodasara/tp-spotify-pg/pull/5))
+    - Added Toggle Shuffle feature ([e9244e1](https://github.com/pratikghodasara/tp-spotify-pg/commit/e9244e1))
+    - Added Toggle Repeat feature ([8e1d459](https://github.com/pratikghodasara/tp-spotify-pg/commit/8e1d459))
+
 ## v0.0.1 - 2024.08.25
 
 ### Added

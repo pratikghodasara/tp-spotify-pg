@@ -63,6 +63,8 @@ Refer to [Changelog](CHANGELOG.md) for details.
  - Automatic Spotify State Update Frequency - Set the duration (in seconds) of how fequently the plugin will get state updates from Spotify.
  - Update Is Playing State Automatically - Set value to 'true' for the plugin to get is playing state update from Spotify automatically or any other value to disable automatic updates.
  - Update Track Info Automatically - Set value to 'true' for the plugin to get is track info update from Spotify automatically or any other value to disable automatic updates.
+ - Update Is Shuffling State Automatically - Set value to 'true' for the plugin to get is is shuffling state update from Spotify automatically or any other value to disable automatic updates.
+ - Update Is Repeating State Automatically - Set value to 'true' for the plugin to get is repeating state update from Spotify automatically or any other value to disable automatic updates.
 
 ### Actions
   - Update Spotify State
@@ -76,6 +78,8 @@ Refer to [Changelog](CHANGELOG.md) for details.
   - Toggle Play Pause Current Track on Spotify
   - Play Next Track on Spotify
   - Play Previous Track on Spotify
+  - Toggle Spotify Shuffle
+  - Toggle Spotify Repeat
   - Quit Spotify
 
 ### States
@@ -98,6 +102,14 @@ Refer to [Changelog](CHANGELOG.md) for details.
   - Spotify Track Duration
   - Spotify Track Id
   - Spotify Track Artwork Url
+  - Is Spotify Shuffling
+    - Values:
+      - true
+      - false
+  - Is Spotify Repeating
+    - Values:
+      - true
+      - false
 
 ### Events
  - On spotify open state changed - Event triggered when the application opens/closes.
@@ -115,6 +127,14 @@ Refer to [Changelog](CHANGELOG.md) for details.
  - On spotify track changed - Event triggered when the application plays a new track.
     - Value:
       - Track Title
+ - On spotify is shuffling state changed - Event triggered when the application shuffle state changed.
+    - Values:
+      - true
+      - false
+ - On spotify is repeating state changed - Event triggered when the application repeat state changed.
+    - Values:
+      - true
+      - false
 
 ## Sample Page
 

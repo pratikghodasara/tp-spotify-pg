@@ -9,4 +9,6 @@ module.exports = {
     SETTING_AUTOMATIC_UPDATE_FREQUENCY: 'Automatic Spotify State Update Frequency',
     SETTING_IS_PLAYING_AUTOMATIC_UPDATE: 'Update Is Playing State Automatically',
     SETTING_TRACK_INFO_AUTOMATIC_UPDATE: 'Update Track Info Automatically',
+    SETTING_IS_SHUFFLING_AUTOMATIC_UPDATE: 'Update Is Shuffling State Automatically',
+    SETTING_IS_REPEATING_AUTOMATIC_UPDATE: 'Update Is Repeating State Automatically',
 }
