@@ -64,6 +64,32 @@ Refer to [Changelog](CHANGELOG.md) for details.
 
 ### Actions
   - Update Spotify State
+  - Open Spotify
+    - Data
+      - Should Hide (Default: Off)
+      - Hide Duration (Default: 2)
+  - Toggle Spotify Visibility
+  - Quit Spotify
+
+### States
+  - Is Spotify Open
+    - Values:
+      - true: Open
+      - false: Closed
+  - Is Spotify Visible
+    - Values:
+      - true: Visible
+      - false: Hidden
+
+### Events
+ - On spotify open state changed - Event triggered when the application opens/closes.
+    - Values:
+      - true: Open
+      - false: Closed
+ - On spotify visible state changed - Event triggered when the application hides/unhides.
+    - Values:
+      - true: Visible
+      - false: Hidden
 
 ## Sample Page
 
@@ -72,6 +98,8 @@ Refer to [Sample Page](resources/tpspotifyas.tpz2) that imports directly into [T
 ## Dependencies
 
 - Project:
+  - [bluebird](https://www.npmjs.com/package/bluebird)
+  - [node-osascript](https://www.npmjs.com/package/node-osascript)
   - [out-url](https://www.npmjs.com/package/out-url)
   - [touchportal-api](https://www.npmjs.com/package/touchportal-api)
 
