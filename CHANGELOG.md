@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - Added Toggle Shuffle feature ([e9244e1](https://github.com/pratikghodasara/tp-spotify-pg/commit/e9244e1))
     - Added Toggle Repeat feature ([8e1d459](https://github.com/pratikghodasara/tp-spotify-pg/commit/8e1d459))
 
+  - Setting up the Volume Features ([#6](https://github.com/pratikghodasara/tp-spotify-pg/pull/6))
+    - Added Mute, Unmute and Change Volume features ([b2cf511](https://github.com/pratikghodasara/tp-spotify-pg/commit/b2cf511))
+    - Added Volume Connector feature ([4cbb9bc](https://github.com/pratikghodasara/tp-spotify-pg/commit/4cbb9bc))
+
 ## v0.0.1 - 2024.08.25
 
 ### Added
