@@ -73,6 +73,8 @@ Refer to [Changelog](CHANGELOG.md) for details.
   - Play Current Track on Spotify
   - Pause Current Track on Spotify
   - Toggle Play Pause Current Track on Spotify
+  - Play Next Track on Spotify
+  - Play Previous Track on Spotify
   - Quit Spotify
 
 ### States

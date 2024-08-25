@@ -155,6 +155,24 @@ tpclient.on("Action", async (data) => {
             }
         });
     }
+    else if (data.actionId === "action_spotifypg_next") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.playNextTrack().then(() => {
+                    getIsPlayingState(true);
+                });
+            }
+        });
+    }
+    else if (data.actionId === "action_spotifypg_previous") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.playPreviousTrack().then(() => {
+                    getIsPlayingState(true);
+                });
+            }
+        });
+    }
     else if (data.actionId === "action_spotifypg_quit") {
         spotifyosa.isApplicationOpen().then((isOpen) => {
             if (isOpen) {

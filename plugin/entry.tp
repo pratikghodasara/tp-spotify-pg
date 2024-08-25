@@ -180,6 +180,40 @@
                     "type": "communicate",
                 },
                 {
+                    "id": "action_spotifypg_next",
+                    "name": "Play Next Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Play next track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_previous",
+                    "name": "Play Previous Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Play previous track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
                     "id": "action_spotifypg_quit",
                     "name": "Quit Spotify",
                     "lines": {

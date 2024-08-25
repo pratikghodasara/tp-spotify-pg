@@ -47,6 +47,14 @@ function playpauseCurrentTrack() {
     return execute('tell application "Spotify" to playpause');
 }
 
+function playNextTrack() {
+    return execute('tell application "Spotify" to next track');
+}
+
+function playPreviousTrack() {
+    return execute('tell application "Spotify"\n if player position is greater than 3 then\n previous track\n previous track\n else\n previous track\n end if\n end tell');
+}
+
 function quitApplication() {
     return execute('tell application "Spotify" to quit');
 }
@@ -62,5 +70,7 @@ module.exports = {
     playCurrentTrack,
     pauseCurrentTrack,
     playpauseCurrentTrack,
+    playNextTrack,
+    playPreviousTrack,
     quitApplication,
 };
