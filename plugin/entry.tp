@@ -67,11 +67,122 @@
                         ]
                     },
                     "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_open",
+                    "name": "Open Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Open spotify application and hide {$shouldhide$} after {$hideduration$} seconds"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                    "data": [
+                        {
+                            "id": "shouldhide",
+                            "label": "Should Hide",
+                            "type": "switch",
+                            "default": false
+                        },
+                        {
+                            "id": "hideduration",
+                            "label": "Hide Duration",
+                            "type": "number",
+                            "default": 2,
+                            "minValue": 1,
+                            "maxValue": 10
+                        }
+                    ]
+                },
+                {
+                    "id": "action_spotifypg_toggle_visibilty",
+                    "name": "Toggle Spotify Visibility",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Toggle spotify application visibility"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_quit",
+                    "name": "Quit Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Quit spotify application"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
                 }
             ],
             "states": [
+                {
+                    "id": "state_spotifypg_open",
+                    "type": "choice",
+                    "desc": "Is Spotify Open",
+                    "default": "false",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ]
+                },
+                {
+                    "id": "state_spotifypg_visible",
+                    "type": "choice",
+                    "desc": "Is Spotify Visible",
+                    "default": "false",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ]
+                }
             ],
             "events": [
+                {
+                    "id":"event_spotifypg_open",
+                    "name":"On spotify open state changed",
+                    "format":"On spotify open state changed to $val",
+                    "type":"communicate",
+                    "valueType":"choice",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ],
+                    "valueStateId":"state_spotifypg_open"
+                },
+                {
+                    "id":"event_spotifypg_visible",
+                    "name":"On spotify visible state changed",
+                    "format":"On spotify visible state changed to $val",
+                    "type":"communicate",
+                    "valueType":"choice",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ],
+                    "valueStateId":"state_spotifypg_visible"
+                }
             ],
             "connectors": [
             ]

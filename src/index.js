@@ -17,6 +17,10 @@ let spotifyPageName = "/TPSpotifyPG.tml"
 let updateAuto = "false";
 let updateFrequency = constants.START_CAPTURE_WAIT_TIME;
 
+const spotifyosa = require('./osascript');
+let previousIsOpenState = undefined;
+let previousIsVisibleState = undefined;
+
 let updateLoop = undefined;
 const settings = {
     [constants.SETTING_SPOTIFY_PAGE_NAME]: spotifyPageName,
@@ -59,6 +63,61 @@ tpclient.on("Action", async (data) => {
     tpclient.logIt("DEBUG", "Action: Received update from touch portal with id:", data.actionId);
     if (data.actionId === "action_spotifypg_update") {
         updateSpotifyState(true)
+    }
+    else if (data.actionId === "action_spotifypg_open") {
+        spotifyosa.isApplicationClosed().then((isClosed) => {
+            if (isClosed) {
+                spotifyosa.openApplication().then(() => {
+                    previousIsOpenState = "true";
+                    tpclient.stateUpdate("state_spotifypg_open", "true");
+
+                    updateSpotifyState(true);
+
+                    if (data.data[0].id === "shouldhide") {
+                        if (data.data[0].value == "On") {
+                            setTimeout(() => {
+                                spotifyosa.hideApplication().then(() => {
+                                    previousIsVisibleState = "false";
+                                    tpclient.stateUpdate("state_spotifypg_visible", "false");
+                                });
+                            }, (data.data[1].value * 1000));
+                        }
+                    }
+                });
+            }
+        });
+    }
+    else if (data.actionId === "action_spotifypg_toggle_visibilty") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.isApplicationVisible().then((isVisible) => {
+                    if (isVisible) {
+                        spotifyosa.hideApplication().then(() => {
+                            previousIsVisibleState = "false";
+                            tpclient.stateUpdate("state_spotifypg_visible", "false");
+                        });
+                    }
+                    else {
+                        spotifyosa.showApplication().then(() => {
+                            previousIsVisibleState = "true";
+                            tpclient.stateUpdate("state_spotifypg_visible", "true");
+                        });
+                    }
+                });
+            }
+        });
+    }
+    else if (data.actionId === "action_spotifypg_quit") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.quitApplication().then(() => {
+                    previousIsOpenState = "false";
+                    tpclient.stateUpdate("state_spotifypg_open", "false");
+
+                    sendDefaultStates();
+                });
+            }
+        });
     }
     else {
         tpclient.logIt("DEBUG", "Action was not defined for ", data.actionId);
@@ -143,7 +202,36 @@ function startSpotifyStateUpdate() {
 }
 
 function updateSpotifyState(shouldForceUpdate) {
+    spotifyosa.isApplicationOpen().then((isOpen) => {
+        if (previousIsOpenState != isOpen.toString()) {
+            previousIsOpenState = isOpen.toString();
+            tpclient.stateUpdate("state_spotifypg_open", isOpen.toString());
 
+            if (!isOpen) {
+                sendDefaultStates();
+            }
+        }
+
+        if (isOpen) {
+            getIsVisibleState();
+        }
+    });
+}
+
+function getIsVisibleState() {
+    spotifyosa.isApplicationVisible().then((isVisible) => {
+        if (previousIsVisibleState != isVisible) {
+            previousIsVisibleState = isVisible;
+            tpclient.stateUpdate("state_spotifypg_visible", isVisible.toString());
+        }
+    });
+}
+
+function sendDefaultStates() {
+    let states = [
+        { id: "state_spotifypg_visible", value: "false" },
+    ];
+    tpclient.stateUpdateMany(states);
 }
 
 tpclient.connect({ pluginId: pluginId, updateUrl: pluginUpdateUrl });
