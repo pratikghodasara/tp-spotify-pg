@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - Added Mute, Unmute and Change Volume features ([b2cf511](https://github.com/pratikghodasara/tp-spotify-pg/commit/b2cf511))
     - Added Volume Connector feature ([4cbb9bc](https://github.com/pratikghodasara/tp-spotify-pg/commit/4cbb9bc))
 
+  - Setting up the Track Position Features ([#7](https://github.com/pratikghodasara/tp-spotify-pg/pull/7))
+    - Added Replay Track feature ([8ba0954](https://github.com/pratikghodasara/tp-spotify-pg/commit/8ba0954))
+    - Added Track Position Connector feature ([5a47b56](https://github.com/pratikghodasara/tp-spotify-pg/commit/5a47b56))
+
 ## v0.0.1 - 2024.08.25
 
 ### Added

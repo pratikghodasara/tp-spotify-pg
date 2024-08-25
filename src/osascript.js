@@ -112,6 +112,18 @@ function setApplicationVolume(value) {
     return execute('tell application "Spotify" to set sound volume to newVolume', { newVolume });
 }
 
+function getTrackPosition() {
+    return execute('tell application "Spotify" to player position');
+}
+
+function setTrackPosition(value) {
+    return getTrackDuration().then((duration) => {
+        let newPosition = parseFloat(duration) * value / 100;
+        newPosition = Math.max(0, Math.min(newPosition, duration - 10));
+        return execute('tell application "Spotify" to set player position to newPosition', { newPosition });
+    });
+}
+
 function quitApplication() {
     return execute('tell application "Spotify" to quit');
 }
@@ -142,5 +154,7 @@ module.exports = {
     toggleRepeat,
     getApplicationVolume,
     setApplicationVolume,
+    getTrackPosition,
+    setTrackPosition,
     quitApplication,
 };

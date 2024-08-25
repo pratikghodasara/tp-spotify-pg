@@ -67,6 +67,7 @@ Refer to [Changelog](CHANGELOG.md) for details.
  - Update Is Repeating State Automatically - Set value to 'true' for the plugin to get is repeating state update from Spotify automatically or any other value to disable automatic updates.
  - Update Is Volume Mute State Automatically - Set value to 'true' for the plugin to get is volume mute state update from Spotify automatically or any other value to disable automatic updates.
  - Update Volume Connector State Automatically - Set value to 'true' for the plugin to get volume connector state update from Spotify automatically or any other value to disable automatic updates.
+ - Update Position Connector State Automatically - Set value to 'true' for the plugin to get position connector state update from Spotify automatically or any other value to disable automatic updates.
 
 ### Actions
   - Update Spotify State
@@ -87,6 +88,7 @@ Refer to [Changelog](CHANGELOG.md) for details.
   - Change Spotify Volume
     - Data
       - Delta Volume (Default: 10)
+  - Replay Current Track on Spotify
   - Quit Spotify
 
 ### States
@@ -153,6 +155,7 @@ Refer to [Changelog](CHANGELOG.md) for details.
 
 ### Connectors
   - Spotify Volume Connector
+  - Spotify Position Connector
 
 ## Sample Page
 
