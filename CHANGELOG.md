@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## v0.0.1 - 2024.08.25
+
 ### Added
   - Setting up the Project ([#1](https://github.com/pratikghodasara/tp-spotify-pg/pull/1))
     - Added Repository files ([6793c42](https://github.com/pratikghodasara/tp-spotify-pg/commit/6793c42))
