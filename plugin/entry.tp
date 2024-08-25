@@ -43,6 +43,16 @@
                 "title":"Automatic Spotify State Update Frequency",
                 "body":"Set the duration (in seconds) of how fequently the plugin will get state updates from Spotify.",
             }
+        },
+        {
+            "name": "Update Is Playing State Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Is Playing State Automatically",
+                "body":"Set value to true for the plugin to get is playing state update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -119,6 +129,57 @@
                     "type": "communicate",
                 },
                 {
+                    "id": "action_spotifypg_play",
+                    "name": "Play Current Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Play current track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_pause",
+                    "name": "Pause Current Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Pause current track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_toggle_play",
+                    "name": "Toggle Play Pause Current Track on Spotify",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                   {
+                                        "lineFormat": "Toggle play pause current track on spotify"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
                     "id": "action_spotifypg_quit",
                     "name": "Quit Spotify",
                     "lines": {
@@ -156,6 +217,16 @@
                         "true",
                         "false"
                     ]
+                },
+                {
+                    "id": "state_spotifypg_play",
+                    "type": "choice",
+                    "desc": "Is Spotify Playing",
+                    "default": "Paused",
+                    "valueChoices": [
+                        "Paused",
+                        "Playing"
+                    ]
                 }
             ],
             "events": [
@@ -182,6 +253,18 @@
                         "false"
                     ],
                     "valueStateId":"state_spotifypg_visible"
+                },
+                {
+                    "id":"event_spotifypg_play",
+                    "name":"On spotify is playing state changed",
+                    "format":"On spotify is playing state changed to $val",
+                    "type":"communicate",
+                    "valueType":"choice",
+                    "valueChoices": [
+                        "Paused",
+                        "Playing"
+                    ],
+                    "valueStateId":"state_spotifypg_play"
                 }
             ],
             "connectors": [

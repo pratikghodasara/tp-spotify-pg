@@ -61,6 +61,7 @@ Refer to [Changelog](CHANGELOG.md) for details.
  - Spotify Page Name - Name of the Spotify Page that will trigger forced state update.
  - Update Spotify State Automatically - Set value to 'true' for the plugin to get state updates from Spotify automatically.
  - Automatic Spotify State Update Frequency - Set the duration (in seconds) of how fequently the plugin will get state updates from Spotify.
+ - Update Is Playing State Automatically - Set value to 'true' for the plugin to get is playing state update from Spotify automatically or any other value to disable automatic updates.
 
 ### Actions
   - Update Spotify State
@@ -69,6 +70,9 @@ Refer to [Changelog](CHANGELOG.md) for details.
       - Should Hide (Default: Off)
       - Hide Duration (Default: 2)
   - Toggle Spotify Visibility
+  - Play Current Track on Spotify
+  - Pause Current Track on Spotify
+  - Toggle Play Pause Current Track on Spotify
   - Quit Spotify
 
 ### States
@@ -80,6 +84,10 @@ Refer to [Changelog](CHANGELOG.md) for details.
     - Values:
       - true: Visible
       - false: Hidden
+  - Is Spotify Playing
+    - Values:
+      - playing
+      - paused
 
 ### Events
  - On spotify open state changed - Event triggered when the application opens/closes.
@@ -90,6 +98,10 @@ Refer to [Changelog](CHANGELOG.md) for details.
     - Values:
       - true: Visible
       - false: Hidden
+ - On spotify play state changed - Event triggered when the application plays or pauses current track.
+    - Values:
+      - playing
+      - paused
 
 ## Sample Page
 

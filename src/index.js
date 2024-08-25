@@ -16,16 +16,19 @@ const pluginReleaseUrl = constants.PLUGINRELEASEURL;
 let spotifyPageName = "/TPSpotifyPG.tml"
 let updateAuto = "false";
 let updateFrequency = constants.START_CAPTURE_WAIT_TIME;
+let updateIsPlayingAuto = "false";
 
 const spotifyosa = require('./osascript');
 let previousIsOpenState = undefined;
 let previousIsVisibleState = undefined;
+let previousIsPlayingState = undefined;
 
 let updateLoop = undefined;
 const settings = {
     [constants.SETTING_SPOTIFY_PAGE_NAME]: spotifyPageName,
     [constants.SETTING_AUTOMATIC_UPDATE]: updateAuto,
     [constants.SETTING_AUTOMATIC_UPDATE_FREQUENCY]: updateFrequency,
+    [constants.SETTING_IS_PLAYING_AUTOMATIC_UPDATE]: updateIsPlayingAuto,
 };
 
 tpclient.on("Settings", (data) => {
@@ -52,6 +55,11 @@ tpclient.on("Settings", (data) => {
     if (updateFrequency != (settings[constants.SETTING_AUTOMATIC_UPDATE_FREQUENCY])) {
         updateFrequency = (settings[constants.SETTING_AUTOMATIC_UPDATE_FREQUENCY]);
         tpclient.logIt("DEBUG", "Settings: Update spotify state frequency is set to", updateFrequency, "seconds");
+    }
+
+    if (updateIsPlayingAuto != settings[constants.SETTING_IS_PLAYING_AUTOMATIC_UPDATE]) {
+        updateIsPlayingAuto = settings[constants.SETTING_IS_PLAYING_AUTOMATIC_UPDATE];
+        tpclient.logIt("DEBUG", "Settings: Update is playing state automatically is set to", updateIsPlayingAuto);
     }
 
     updateSpotifyState(true);
@@ -103,6 +111,46 @@ tpclient.on("Action", async (data) => {
                             tpclient.stateUpdate("state_spotifypg_visible", "true");
                         });
                     }
+                });
+            }
+        });
+    }
+    else if (data.actionId === "action_spotifypg_play") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.isApplicationPlaying().then((isPlaying) => {
+                    if (isPlaying == "paused") {
+                        spotifyosa.playCurrentTrack().then(() => {
+                            previousIsPlayingState = "playing";
+                            tpclient.stateUpdate("state_spotifypg_play", "playing");
+                        });
+                    }
+                });
+            }
+        });
+    }
+    else if (data.actionId === "action_spotifypg_pause") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.isApplicationPlaying().then((isPlaying) => {
+                    if (isPlaying == "playing") {
+                        spotifyosa.pauseCurrentTrack().then(() => {
+                            previousIsPlayingState = "paused";
+                            tpclient.stateUpdate("state_spotifypg_play", "paused");
+                        });
+                    }
+                });
+            }
+        });
+    }
+    else if (data.actionId === "action_spotifypg_toggle_play") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                spotifyosa.playpauseCurrentTrack().then(() => {
+                    spotifyosa.isApplicationPlaying().then((isPlaying) => {
+                        previousIsPlayingState = isPlaying;
+                        tpclient.stateUpdate("state_spotifypg_play", isPlaying);
+                    });
                 });
             }
         });
@@ -214,6 +262,7 @@ function updateSpotifyState(shouldForceUpdate) {
 
         if (isOpen) {
             getIsVisibleState();
+            getIsPlayingState(shouldForceUpdate);
         }
     });
 }
@@ -227,9 +276,21 @@ function getIsVisibleState() {
     });
 }
 
+function getIsPlayingState(shouldForceUpdate) {
+    if (updateIsPlayingAuto == "true" || shouldForceUpdate) {
+        spotifyosa.isApplicationPlaying().then((isPlaying) => {
+            if (previousIsPlayingState != isPlaying) {
+                previousIsPlayingState = isPlaying;
+                tpclient.stateUpdate("state_spotifypg_play", isPlaying);
+            }
+        });
+    }
+}
+
 function sendDefaultStates() {
     let states = [
         { id: "state_spotifypg_visible", value: "false" },
+        { id: "state_spotifypg_play", value: "paused" },
     ];
     tpclient.stateUpdateMany(states);
 }

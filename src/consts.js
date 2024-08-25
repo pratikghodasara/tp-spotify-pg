@@ -7,4 +7,5 @@ module.exports = {
     SETTING_SPOTIFY_PAGE_NAME: 'Spotify Page Name',
     SETTING_AUTOMATIC_UPDATE: 'Update Spotify State Automatically',
     SETTING_AUTOMATIC_UPDATE_FREQUENCY: 'Automatic Spotify State Update Frequency',
+    SETTING_IS_PLAYING_AUTOMATIC_UPDATE: 'Update Is Playing State Automatically',
 }

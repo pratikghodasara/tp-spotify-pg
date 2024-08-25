@@ -4,6 +4,7 @@
 const osascript = require('node-osascript');
 const Promise = require('bluebird');
 const execute = Promise.promisify(osascript.execute);
+const moment = require('moment');
 
 
 function isApplicationOpen() {
@@ -30,6 +31,22 @@ function showApplication() {
     return execute('tell application "System Events"\n set visible of application process "Spotify" to true\n end tell');
 }
 
+function isApplicationPlaying() {
+    return execute('tell application "Spotify" to get player state as string');
+}
+
+function playCurrentTrack() {
+    return execute('tell application "Spotify" to play');
+}
+
+function pauseCurrentTrack() {
+    return execute('tell application "Spotify" to pause');
+}
+
+function playpauseCurrentTrack() {
+    return execute('tell application "Spotify" to playpause');
+}
+
 function quitApplication() {
     return execute('tell application "Spotify" to quit');
 }
@@ -41,5 +58,9 @@ module.exports = {
     isApplicationVisible,
     hideApplication,
     showApplication,
+    isApplicationPlaying,
+    playCurrentTrack,
+    pauseCurrentTrack,
+    playpauseCurrentTrack,
     quitApplication,
 };
