@@ -20,6 +20,7 @@ let updateIsPlayingAuto = "false";
 let updateTrackInfoAuto = "false";
 let updateIsShufflingAuto = "false";
 let updateIsRepeatingAuto = "false";
+let updateIsVolumeMuteAuto = "false";
 
 const spotifyosa = require('./osascript');
 let previousIsOpenState = undefined;
@@ -27,6 +28,7 @@ let previousIsVisibleState = undefined;
 let previousIsPlayingState = undefined;
 let previousIsShufflingState = undefined;
 let previousIsRepeatingState = undefined;
+let previousIsVolumeMuteState = undefined;
 
 let currentTrackTitle = undefined;
 let currentTrackAlbum = undefined;
@@ -35,6 +37,8 @@ let currentTrackAlbumArtist = undefined;
 let currentTrackDuration = undefined;
 let currentTrackId = undefined;
 let currentTrackArtworkUrl = undefined;
+
+let beforeMuteVolume = undefined;
 
 let updateLoop = undefined;
 const settings = {
@@ -45,6 +49,7 @@ const settings = {
     [constants.SETTING_TRACK_INFO_AUTOMATIC_UPDATE]: updateTrackInfoAuto,
     [constants.SETTING_IS_SHUFFLING_AUTOMATIC_UPDATE]: updateIsShufflingAuto,
     [constants.SETTING_IS_REPEATING_AUTOMATIC_UPDATE]: updateIsRepeatingAuto,
+    [constants.SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE]: updateIsVolumeMuteAuto,
 };
 
 tpclient.on("Settings", (data) => {
@@ -91,6 +96,11 @@ tpclient.on("Settings", (data) => {
     if (updateIsRepeatingAuto != settings[constants.SETTING_IS_REPEATING_AUTOMATIC_UPDATE]) {
         updateIsRepeatingAuto = settings[constants.SETTING_IS_REPEATING_AUTOMATIC_UPDATE];
         tpclient.logIt("DEBUG", "Settings: Update is repeating state automatically is set to", updateIsRepeatingAuto);
+    }
+
+    if (updateIsVolumeMuteAuto != settings[constants.SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE]) {
+        updateIsVolumeMuteAuto = settings[constants.SETTING_IS_VOLUME_MUTE_AUTOMATIC_UPDATE];
+        tpclient.logIt("DEBUG", "Settings: Update is volume mute state automatically is set to", updateIsVolumeMuteAuto);
     }
 
     updateSpotifyState(true);
@@ -234,6 +244,57 @@ tpclient.on("Action", async (data) => {
             }
         });
     }
+    else if (data.actionId === "action_spotifypg_mute_volume") {
+        if (previousIsVolumeMuteState != "true") {
+            spotifyosa.isApplicationOpen().then((isOpen) => {
+                if (isOpen) {
+                    spotifyosa.getApplicationVolume().then((currentVolume) => {
+                        beforeMuteVolume = currentVolume;
+
+                        spotifyosa.setApplicationVolume(0).then(() => {
+                            previousIsVolumeMuteState = "true";
+                            tpclient.stateUpdate("state_spotifypg_mute", "true");
+                        })
+                    });
+                }
+            });
+        }
+    }
+    else if (data.actionId === "action_spotifypg_unmute_volume") {
+        if (previousIsVolumeMuteState != "false") {
+            spotifyosa.isApplicationOpen().then((isOpen) => {
+                if (isOpen) {
+                    if (!beforeMuteVolume) {
+                        beforeMuteVolume = 100;
+                    }
+
+                    spotifyosa.setApplicationVolume(beforeMuteVolume).then(() => {
+                        previousIsVolumeMuteState = "false";
+                        tpclient.stateUpdate("state_spotifypg_mute", "false");
+                    })
+                }
+            });
+        }
+    }
+    else if (data.actionId === "action_spotifypg_change_volume") {
+        spotifyosa.isApplicationOpen().then((isOpen) => {
+            if (isOpen) {
+                if (data.data[0].id === "deltavolume") {
+                    spotifyosa.getApplicationVolume().then((currentVolume) => {
+                        let newVolume = parseInt(currentVolume) + parseInt(data.data[0].value) + 1;
+
+                        if (newVolume == 1) {
+                            newVolume = 0;
+                        }
+
+                        spotifyosa.setApplicationVolume(newVolume).then(() => {
+                            getIsVolumeMuteState(true);
+                        });
+                    });
+                }
+            }
+        });
+    }
     else if (data.actionId === "action_spotifypg_quit") {
         spotifyosa.isApplicationOpen().then((isOpen) => {
             if (isOpen) {
@@ -344,6 +405,7 @@ function updateSpotifyState(shouldForceUpdate) {
             getIsPlayingState(shouldForceUpdate, true);
             getIsShufflingState(shouldForceUpdate);
             getIsRepeatingState(shouldForceUpdate);
+            getIsVolumeMuteState(shouldForceUpdate);
         }
     });
 }
@@ -433,6 +495,25 @@ function getIsRepeatingState(shouldForceUpdate) {
     }
 }
 
+function getIsVolumeMuteState(shouldForceUpdate) {
+    if (updateIsVolumeMuteAuto == "true" || shouldForceUpdate) {
+        spotifyosa.getApplicationVolume().then((currentVolume) => {
+            if (currentVolume == 0) {
+                if (previousIsVolumeMuteState != "true") {
+                    previousIsVolumeMuteState = "true";
+                    tpclient.stateUpdate("state_spotifypg_mute", "true");
+                }
+            }
+            else {
+                if (previousIsVolumeMuteState != "false") {
+                    previousIsVolumeMuteState = "false";
+                    tpclient.stateUpdate("state_spotifypg_mute", "false");
+                }
+            }
+        });
+    }
+}
+
 function sendTrackInfoStates(trackTitle, trackAlbum, trackArtist, trackAlbumArtist, trackDuration, trackId, trackArtworkUrl) {
     let states = [
         { id: 'state_spotifypg_track_title', value: trackTitle },
@@ -452,6 +533,7 @@ function sendDefaultStates() {
         { id: "state_spotifypg_play", value: "paused" },
         { id: "state_spotifypg_shuffle", value: "false" },
         { id: "state_spotifypg_repeat", value: "false" },
+        { id: "state_spotifypg_mute", value: "false" },
     ];
     tpclient.stateUpdateMany(states);
 }
