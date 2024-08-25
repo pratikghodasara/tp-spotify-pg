@@ -83,6 +83,26 @@
                 "title":"Update Is Repeating State Automatically",
                 "body":"Set value to true for the plugin to get is repeating state update from Spotify automatically.",
             }
+        },
+        {
+            "name": "Update Is Volume Mute State Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Is Volume Mute State Automatically",
+                "body":"Set value to true for the plugin to get is volume mute state update from Spotify automatically.",
+            }
+        },
+        {
+            "name": "Update Volume Connector State Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Volume Connector State Automatically",
+                "body":"Set value to true for the plugin to get volume connector state update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -278,6 +298,67 @@
                     "type": "communicate",
                 },
                 {
+                    "id": "action_spotifypg_mute_volume",
+                    "name": "Mute Spotify Volume",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Mute spotify application volume"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_unmute_volume",
+                    "name": "Unmute Spotify Volume",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Unmute spotify application volume"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
+                    "id": "action_spotifypg_change_volume",
+                    "name": "Change Spotify Volume",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Change spotify volume by {$deltavolume$}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                    "data": [
+                        {
+                            "id": "deltavolume",
+                            "label": "deltavolume",
+                            "type": "number",
+                            "default": 10,
+                            "minValue": -100,
+                            "maxValue": 100
+                        }
+                    ]
+                },
+                {
                     "id": "action_spotifypg_quit",
                     "name": "Quit Spotify",
                     "lines": {
@@ -387,6 +468,16 @@
                         "true",
                         "false"
                     ]
+                },
+                {
+                    "id": "state_spotifypg_mute",
+                    "type": "choice",
+                    "desc": "Is Spotify Volume Muted",
+                    "default": "false",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ]
                 }
             ],
             "events": [
@@ -457,9 +548,26 @@
                         "false"
                     ],
                     "valueStateId":"state_spotifypg_repeat"
+                },
+                {
+                    "id":"event_spotifypg_mute",
+                    "name":"On spotify is volume mute state changed",
+                    "format":"On spotify is volume mute state changed to $val",
+                    "type":"communicate",
+                    "valueType":"choice",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ],
+                    "valueStateId":"state_spotifypg_mute"
                 }
             ],
             "connectors": [
+                {
+                    "id": "connector_spotifypg_volume",
+                    "name": "Spotify Volume Connector",
+                    "format": "Spotify volume connector"
+                }
             ]
         }
     ]

@@ -103,6 +103,15 @@ function toggleRepeat() {
     return execute('tell application "Spotify"\n if repeating then\n set repeating to false\n else\n set repeating to true\n end if\n end tell');
 }
 
+function getApplicationVolume() {
+    return execute('tell application "Spotify" to sound volume as integer');
+}
+
+function setApplicationVolume(value) {
+    let newVolume = Math.max(0, Math.min(value, 100));
+    return execute('tell application "Spotify" to set sound volume to newVolume', { newVolume });
+}
+
 function quitApplication() {
     return execute('tell application "Spotify" to quit');
 }
@@ -131,5 +140,7 @@ module.exports = {
     toggleShuffle,
     isApplicationRepeating,
     toggleRepeat,
+    getApplicationVolume,
+    setApplicationVolume,
     quitApplication,
 };

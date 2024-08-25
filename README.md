@@ -65,6 +65,8 @@ Refer to [Changelog](CHANGELOG.md) for details.
  - Update Track Info Automatically - Set value to 'true' for the plugin to get is track info update from Spotify automatically or any other value to disable automatic updates.
  - Update Is Shuffling State Automatically - Set value to 'true' for the plugin to get is is shuffling state update from Spotify automatically or any other value to disable automatic updates.
  - Update Is Repeating State Automatically - Set value to 'true' for the plugin to get is repeating state update from Spotify automatically or any other value to disable automatic updates.
+ - Update Is Volume Mute State Automatically - Set value to 'true' for the plugin to get is volume mute state update from Spotify automatically or any other value to disable automatic updates.
+ - Update Volume Connector State Automatically - Set value to 'true' for the plugin to get volume connector state update from Spotify automatically or any other value to disable automatic updates.
 
 ### Actions
   - Update Spotify State
@@ -80,6 +82,11 @@ Refer to [Changelog](CHANGELOG.md) for details.
   - Play Previous Track on Spotify
   - Toggle Spotify Shuffle
   - Toggle Spotify Repeat
+  - Mute Spotify Volume
+  - Unmute Spotify Volume
+  - Change Spotify Volume
+    - Data
+      - Delta Volume (Default: 10)
   - Quit Spotify
 
 ### States
@@ -110,6 +117,10 @@ Refer to [Changelog](CHANGELOG.md) for details.
     - Values:
       - true
       - false
+  - Is Spotify Volume Mute
+    - Values:
+      - true
+      - false
 
 ### Events
  - On spotify open state changed - Event triggered when the application opens/closes.
@@ -135,6 +146,13 @@ Refer to [Changelog](CHANGELOG.md) for details.
     - Values:
       - true
       - false
+ - On spotify is volume mute state changed - Event triggered when the application volume mute state changed.
+    - Values:
+      - true: Muted
+      - false: Unmuted
+
+### Connectors
+  - Spotify Volume Connector
 
 ## Sample Page
 
