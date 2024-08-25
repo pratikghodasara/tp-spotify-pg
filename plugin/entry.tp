@@ -73,6 +73,16 @@
                 "title":"Update Is Shuffling State Automatically",
                 "body":"Set value to true for the plugin to get is shuffling state update from Spotify automatically.",
             }
+        },
+        {
+            "name": "Update Is Repeating State Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Is Repeating State Automatically",
+                "body":"Set value to true for the plugin to get is repeating state update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -251,6 +261,23 @@
                     "type": "communicate",
                 },
                 {
+                    "id": "action_spotifypg_toggle_repeat",
+                    "name": "Toggle Spotify Repeat",
+                    "lines": {
+                        "action": [
+                            {
+                                "language": "default",
+                                "data": [
+                                    {
+                                        "lineFormat": "Toggle spotify application repeat"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "type": "communicate",
+                },
+                {
                     "id": "action_spotifypg_quit",
                     "name": "Quit Spotify",
                     "lines": {
@@ -350,6 +377,16 @@
                         "true",
                         "false"
                     ]
+                },
+                {
+                    "id": "state_spotifypg_repeat",
+                    "type": "choice",
+                    "desc": "Is Spotify Repeating",
+                    "default": "false",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ]
                 }
             ],
             "events": [
@@ -408,6 +445,18 @@
                         "false"
                     ],
                     "valueStateId":"state_spotifypg_shuffle"
+                },
+                {
+                    "id":"event_spotifypg_repeat",
+                    "name":"On spotify is repeating state changed",
+                    "format":"On spotify is repeating state changed to $val",
+                    "type":"communicate",
+                    "valueType":"choice",
+                    "valueChoices": [
+                        "true",
+                        "false"
+                    ],
+                    "valueStateId":"state_spotifypg_repeat"
                 }
             ],
             "connectors": [
