@@ -17,11 +17,20 @@ let spotifyPageName = "/TPSpotifyPG.tml"
 let updateAuto = "false";
 let updateFrequency = constants.START_CAPTURE_WAIT_TIME;
 let updateIsPlayingAuto = "false";
+let updateTrackInfoAuto = "false";
 
 const spotifyosa = require('./osascript');
 let previousIsOpenState = undefined;
 let previousIsVisibleState = undefined;
 let previousIsPlayingState = undefined;
+
+let currentTrackTitle = undefined;
+let currentTrackAlbum = undefined;
+let currentTrackArtist = undefined;
+let currentTrackAlbumArtist = undefined;
+let currentTrackDuration = undefined;
+let currentTrackId = undefined;
+let currentTrackArtworkUrl = undefined;
 
 let updateLoop = undefined;
 const settings = {
@@ -29,6 +38,7 @@ const settings = {
     [constants.SETTING_AUTOMATIC_UPDATE]: updateAuto,
     [constants.SETTING_AUTOMATIC_UPDATE_FREQUENCY]: updateFrequency,
     [constants.SETTING_IS_PLAYING_AUTOMATIC_UPDATE]: updateIsPlayingAuto,
+    [constants.SETTING_TRACK_INFO_AUTOMATIC_UPDATE]: updateTrackInfoAuto,
 };
 
 tpclient.on("Settings", (data) => {
@@ -60,6 +70,11 @@ tpclient.on("Settings", (data) => {
     if (updateIsPlayingAuto != settings[constants.SETTING_IS_PLAYING_AUTOMATIC_UPDATE]) {
         updateIsPlayingAuto = settings[constants.SETTING_IS_PLAYING_AUTOMATIC_UPDATE];
         tpclient.logIt("DEBUG", "Settings: Update is playing state automatically is set to", updateIsPlayingAuto);
+    }
+
+    if (updateTrackInfoAuto != settings[constants.SETTING_TRACK_INFO_AUTOMATIC_UPDATE]) {
+        updateTrackInfoAuto = settings[constants.SETTING_TRACK_INFO_AUTOMATIC_UPDATE];
+        tpclient.logIt("DEBUG", "Settings: Update track info automatically is set to", updateTrackInfoAuto);
     }
 
     updateSpotifyState(true);
@@ -123,6 +138,8 @@ tpclient.on("Action", async (data) => {
                         spotifyosa.playCurrentTrack().then(() => {
                             previousIsPlayingState = "playing";
                             tpclient.stateUpdate("state_spotifypg_play", "playing");
+
+                            getTrackInfoStates();
                         });
                     }
                 });
@@ -137,6 +154,8 @@ tpclient.on("Action", async (data) => {
                         spotifyosa.pauseCurrentTrack().then(() => {
                             previousIsPlayingState = "paused";
                             tpclient.stateUpdate("state_spotifypg_play", "paused");
+
+                            getTrackInfoStates();
                         });
                     }
                 });
@@ -150,6 +169,8 @@ tpclient.on("Action", async (data) => {
                     spotifyosa.isApplicationPlaying().then((isPlaying) => {
                         previousIsPlayingState = isPlaying;
                         tpclient.stateUpdate("state_spotifypg_play", isPlaying);
+
+                        getTrackInfoStates();
                     });
                 });
             }
@@ -159,7 +180,7 @@ tpclient.on("Action", async (data) => {
         spotifyosa.isApplicationOpen().then((isOpen) => {
             if (isOpen) {
                 spotifyosa.playNextTrack().then(() => {
-                    getIsPlayingState(true);
+                    getIsPlayingState(true, true);
                 });
             }
         });
@@ -168,7 +189,7 @@ tpclient.on("Action", async (data) => {
         spotifyosa.isApplicationOpen().then((isOpen) => {
             if (isOpen) {
                 spotifyosa.playPreviousTrack().then(() => {
-                    getIsPlayingState(true);
+                    getIsPlayingState(true, true);
                 });
             }
         });
@@ -294,15 +315,71 @@ function getIsVisibleState() {
     });
 }
 
-function getIsPlayingState(shouldForceUpdate) {
+function getIsPlayingState(shouldForceUpdate, shouldUpdateTrackInfoStates) {
     if (updateIsPlayingAuto == "true" || shouldForceUpdate) {
         spotifyosa.isApplicationPlaying().then((isPlaying) => {
             if (previousIsPlayingState != isPlaying) {
                 previousIsPlayingState = isPlaying;
                 tpclient.stateUpdate("state_spotifypg_play", isPlaying);
             }
+
+            if (shouldUpdateTrackInfoStates) {
+                getTrackInfoStates();
+            }
         });
     }
+}
+
+function getTrackInfoStates() {
+    spotifyosa.getTrackTitle().then((result) => {
+        currentTrackTitle = result;
+        if (currentTrackTitle != "" && previousIsPlayingState == "playing") {
+            spotifyosa.getTrackAlbum().then((result) => {
+                currentTrackAlbum = result;
+
+                spotifyosa.getTrackArtist().then((result) => {
+                    currentTrackArtist = result;
+
+                    spotifyosa.getTrackAlbumArtist().then((result) => {
+                        currentTrackAlbumArtist = result;
+
+                        spotifyosa.getTrackDuration().then((result) => {
+                            currentTrackDuration = result;
+
+                            spotifyosa.getTrackId().then((result) => {
+                                currentTrackId = result;
+
+                                spotifyosa.getTrackArtworkUrl().then((result) => {
+                                    currentTrackArtworkUrl = result;
+
+                                    sendTrackInfoStates(currentTrackTitle, currentTrackAlbum, currentTrackArtist, currentTrackAlbumArtist, currentTrackDuration, currentTrackId, currentTrackArtworkUrl);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }
+        else if (currentTrackTitle == "Advertisement") {
+            sendTrackInfoStates("Advertisement", "", "", "", "", "", "");
+        }
+        else {
+            sendTrackInfoStates("", "", "", "", "", "", "");
+        }
+    });
+}
+
+function sendTrackInfoStates(trackTitle, trackAlbum, trackArtist, trackAlbumArtist, trackDuration, trackId, trackArtworkUrl) {
+    let states = [
+        { id: 'state_spotifypg_track_title', value: trackTitle },
+        { id: 'state_spotifypg_track_album', value: trackAlbum },
+        { id: 'state_spotifypg_track_artist', value: trackArtist },
+        { id: 'state_spotifypg_track_album_artist', value: trackAlbumArtist },
+        { id: 'state_spotifypg_track_duration', value: trackDuration },
+        { id: 'state_spotifypg_track_id', value: trackId },
+        { id: 'state_spotifypg_track_artwork', value: trackArtworkUrl },
+    ];
+    tpclient.stateUpdateMany(states);
 }
 
 function sendDefaultStates() {

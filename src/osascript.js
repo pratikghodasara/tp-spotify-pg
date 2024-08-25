@@ -55,6 +55,38 @@ function playPreviousTrack() {
     return execute('tell application "Spotify"\n if player position is greater than 3 then\n previous track\n previous track\n else\n previous track\n end if\n end tell');
 }
 
+function getTrackTitle() {
+    return execute('tell application "Spotify" to name of current track as string');
+}
+
+function getTrackAlbum() {
+    return execute('tell application "Spotify" to album of current track as string');
+}
+
+function getTrackArtist() {
+    return execute('tell application "Spotify" to artist of current track as string');
+}
+
+function getTrackAlbumArtist() {
+    return execute('tell application "Spotify" to album artist of current track as string');
+}
+
+function getTrackDuration() {
+    return execute('tell application "Spotify" to duration of current track').then((duration) => {
+        return moment.duration(duration, 'milliseconds').asSeconds();
+    });
+}
+
+function getTrackId() {
+    return execute('tell application "Spotify" to ID of current track as string').then((id) => {
+        return id.match(/(.*):(.*)/)[2];
+    });
+}
+
+function getTrackArtworkUrl() {
+    return execute('tell application "Spotify" to artwork url of current track as string');
+}
+
 function quitApplication() {
     return execute('tell application "Spotify" to quit');
 }
@@ -72,5 +104,12 @@ module.exports = {
     playpauseCurrentTrack,
     playNextTrack,
     playPreviousTrack,
+    getTrackTitle,
+    getTrackAlbum,
+    getTrackArtist,
+    getTrackAlbumArtist,
+    getTrackDuration,
+    getTrackId,
+    getTrackArtworkUrl,
     quitApplication,
 };

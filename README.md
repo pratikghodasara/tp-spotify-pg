@@ -62,6 +62,7 @@ Refer to [Changelog](CHANGELOG.md) for details.
  - Update Spotify State Automatically - Set value to 'true' for the plugin to get state updates from Spotify automatically.
  - Automatic Spotify State Update Frequency - Set the duration (in seconds) of how fequently the plugin will get state updates from Spotify.
  - Update Is Playing State Automatically - Set value to 'true' for the plugin to get is playing state update from Spotify automatically or any other value to disable automatic updates.
+ - Update Track Info Automatically - Set value to 'true' for the plugin to get is track info update from Spotify automatically or any other value to disable automatic updates.
 
 ### Actions
   - Update Spotify State
@@ -90,6 +91,13 @@ Refer to [Changelog](CHANGELOG.md) for details.
     - Values:
       - playing
       - paused
+  - Spotify Track Title
+  - Spotify Track Album
+  - Spotify Track Artist
+  - Spotify Track Album Artist
+  - Spotify Track Duration
+  - Spotify Track Id
+  - Spotify Track Artwork Url
 
 ### Events
  - On spotify open state changed - Event triggered when the application opens/closes.
@@ -104,6 +112,9 @@ Refer to [Changelog](CHANGELOG.md) for details.
     - Values:
       - playing
       - paused
+ - On spotify track changed - Event triggered when the application plays a new track.
+    - Value:
+      - Track Title
 
 ## Sample Page
 
@@ -113,6 +124,7 @@ Refer to [Sample Page](resources/tpspotifyas.tpz2) that imports directly into [T
 
 - Project:
   - [bluebird](https://www.npmjs.com/package/bluebird)
+  - [moment](https://www.npmjs.com/package/moment)
   - [node-osascript](https://www.npmjs.com/package/node-osascript)
   - [out-url](https://www.npmjs.com/package/out-url)
   - [touchportal-api](https://www.npmjs.com/package/touchportal-api)

@@ -53,6 +53,16 @@
                 "title":"Update Is Playing State Automatically",
                 "body":"Set value to true for the plugin to get is playing state update from Spotify automatically.",
             }
+        },
+        {
+            "name": "Update Track Info Automatically",
+            "default": "false",
+            "type": "text",
+            "readOnly": false,
+            "tooltip":{
+                "title":"Update Track Info Automatically",
+                "body":"Set value to true for the plugin to get track info update from Spotify automatically.",
+            }
         }
     ],
     "categories": [
@@ -261,6 +271,48 @@
                         "Paused",
                         "Playing"
                     ]
+                },
+                {
+                    "id": "state_spotifypg_track_title",
+                    "type": "text",
+                    "desc": "Spotify Track Title",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_album",
+                    "type": "text",
+                    "desc": "Spotify Track Album",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_artist",
+                    "type": "text",
+                    "desc": "Spotify Track Artist",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_album_artist",
+                    "type": "text",
+                    "desc": "Spotify Track Album Artist",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_duration",
+                    "type": "text",
+                    "desc": "Spotify Track Duration",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_id",
+                    "type": "text",
+                    "desc": "Spotify Track Id",
+                    "default": ""
+                },
+                {
+                    "id": "state_spotifypg_track_artwork",
+                    "type": "text",
+                    "desc": "Spotify Track Artwork Url",
+                    "default": ""
                 }
             ],
             "events": [
@@ -299,6 +351,14 @@
                         "Playing"
                     ],
                     "valueStateId":"state_spotifypg_play"
+                },
+                {
+                    "id":"event_spotifypg_track",
+                    "name":"On spotify track changed",
+                    "format":"On spotify track changed to $val",
+                    "type":"communicate",
+                    "valueType":"text",
+                    "valueStateId":"state_spotifypg_track_title"
                 }
             ],
             "connectors": [
